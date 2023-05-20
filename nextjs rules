@@ -1,0 +1,469 @@
+                         NextJs Rules for better programming.... 
+                         
+     
+     
+📌 Next.js allows us to import modules without specifying the file extension. To make it more Strict we can define a rule for extensions.
+
+This is for File Extension Rule -
+
+{
+  "rules": {
+    "import/extensions": ["error", "always", {
+      "js": "never",
+      "jsx": "never",
+      "ts": "never",
+      "tsx": "never"
+    }]
+  }
+}
+
+Let me break it down what it is actually..
+
+
+ 1) JavaScript files  have the .js extension. By setting "js": "never", the ESLint rule ensures that the file extension .js should never be leave out when importing JavaScript files. We will now not import like this './demo' we will import now like this './demo.js'
+ 
+ 2) JSX files : JSX is mainly for react so we will import like this './demo' we will import now like this './demo.jsx'
+
+ 3) TypeScript files: TypeScript files have the .ts extension. so we will import like this './demo' we will import now like this './demo.ts'
+
+ 4) TypeScript JSX files : In this type of file we will import like this './demo' we will import now like this './demo.tsx'
+
+
+
+ 📌 "no-console": Not allowing the use of console.log and other console methods in production code to keep cleane code and avoid data leakage..
+ 
+ Lets understand it by one example -
+
+Wrong method -
+
+function calculateTotal(items) {
+  console.log('Calculating total...');
+  let total = 0;
+  items.forEach(item => {
+    total += item.price;
+  });
+  console.log('Total:', total); 
+  return total;
+}
+
+Explanation - 
+In this example, the calculateTotal function includes console.log statements to log messages and the final total value. However, this breaks the "no-console" rule because it is logging in production code and our aim is to avoid console in production code ..
+To work with the rule, we should remove the console.log statements in production code or replace them with appropriate log whic is specific to our project, such as a log library.
+
+
+Correct code which is working with our rule -
+
+function calculateTotal(items) {
+  let total = 0;
+  items.forEach(item => {
+    total += item.price;
+  });
+  return total;
+}
+
+📌 Implementing that all the React components have 'import React from 'react' at the top
+
+We have to add these lines
+
+rules: {
+    'react/react-in-jsx-scope': 'error',
+  }
+  
+   to have a fixed rule that each components must have 'import React from 'react' at the top or else it will throw error..
+
+Now one can have a doubt that what are benefits of using 'import React from 'react' at the top because it is not compulosry as when one remove this line then also they will not face a error,, BUT WHY this??
+
+These are some benefits to have it -
+
+1) Consistency - It becomes clear that Components are relying on the React library.
+
+2) Making it More Readable and Maintainable: import statement for React makes our code more readable and understandable, especially for  who are not familiar with our codebase. It  indicates that the React library is required for rendering components.
+
+3) Best Practices:  importing React is considered  best practice and is also recommended by the React team.. so why cant we add one line rather than being a bad programmer.
+
+
+📌 Avoiding using "Unused Variables" or "No Unused Variables"..
+
+This rule in  is used to detect unused variables from your code. It helps keep code clean by identifying variables that are defined but not actually used anywhere. 
+
+By enabling this rule, it will either display a warning or an error when it detects unused variables, depending on what is in our config..
+
+Example -
+
+1) rules: {
+    'no-unused-vars': 'warn',
+  }
+  
+  If this is our config then if there will be unused variable then it will give us a warning instead of error.
+
+2)  rules: {
+    'no-unused-vars': 'error',
+  }
+  
+  If this is our config then if there is unused variable then it will give us a error instead of warning.
+
+It depends on us what we want 'error' or 'warning'.
+
+📌 Avoiding using "Unused Imports" or "No used Imports"..
+
+If one is using Imports then they must use it as if they will not then it can create aa error , take extra space, time and more..
+
+So to avoid it we can create a rule which will detect and give error wherever there will be no used imports.
+
+This will be our rule -
+
+1) "rules": {
+    "no-unused-vars": "error"
+  }
+  
+  In this configuration, the "no-unused-vars" rule is set to "error", which means that if any imported module is not used in the code, it will report it as an error.
+
+2) "rules": {
+    "no-unused-vars": "warn"
+  }
+
+ 
+  In this configuration, the "no-unused-vars" rule is set to "warn", which means that if any imported module is not used in the code, it will report a warn .
+
+
+📌 Using camelCase for variables name..
+
+camelCase example - 'myVariableName'
+
+1) const my_variable_name = "test";
+
+This variable naming not follows camelCase rule so it will throw error or warn depending on our config setting
+
+2) const myVariableName = "hello";
+
+This is correct way of declaring variable name..
+
+This is will be our rule to implement -
+
+1) rules: {
+    camelcase: "error",
+  }
+  
+This config will give a error when variable name will not be in camelCase.
+
+2) rules: {
+    camelcase: "warn",
+  }
+  
+This config will give a warning when variable name will not be in camelCase.
+
+📌 Consistent File Naming such as kebab case or camel case..
+
+This rule will help maintaing a consistent file naming in our project.. It allows us to specify a naming style (kebab case or camel case) which makes our project more clean and easy to maintain..
+
+
+In case to set kebab case for file naming we have to implement this in our config file -
+
+
+ 1) rules: {
+    'filenames': [
+      'error',
+      {
+        'case': 'kebabCase'
+
+In this  filenames is set to "error", it means that any files breaking the specified naming will result in an error.
+
+
+ rules: {
+    'filenames': [
+      'warn',
+      {
+        'case': 'camelCase'
+
+In this  filenames is set to "warn", it means that any files breaking the specified naming will result in an warning .
+
+
+2) rules: {
+    'filenames': [
+      'error',
+      {
+        'case': 'camelCase'
+
+In this  filenames is set to "error", it means that any files breaking the specified naming will result in an error.
+
+
+ rules: {
+    'filenames': [
+      'warn',
+      {
+        'case': 'kebabCase'
+
+In this  filenames is set to "warn", it means that any files breaking the specified naming will result in an warning .
+
+📌 Following 'default' Exports in our project..
+
+This rule will help in using default exports over named ones.. Default exports allow us to export a single value as the default export from a module, which will simplify imports.
+
+
+1) Example of Incorrect export - 
+
+
+export const myComponent = () => {
+  
+};
+
+
+// It  exports the component myComponent as a named export. If the rule is enabled, it will raise an error for this.
+
+
+2) Example of Incorrect export - 
+
+
+const MyComponent = () => {
+  
+};
+
+
+// This exports MyComponent as the default export, which adheres to the rule and will not give any warnings or errors.
+
+
+Code to implement this rull will be -
+
+ 1) rules: {
+    'import/export': 'error',
+  } 
+
+
+// It will give error if rule is not followed.
+
+2) rules: {
+    'import/export': 'warn',
+  } 
+
+// It will give warning if rule is not followed.
+
+
+📌 Promoting Usage of 'Link' component for navigation within our project..
+
+We must use 'Link' component for navigating to diffrent pages instead of using anchor tag (<a>).. Link component helps improve experience as it is faster and smoother..
+
+This should be our config to set this rule -
+
+rules: {
+    'import/no-unresolved': ['error', { ignore: ['^next/link$'] }],
+    'jsx-a11y/anchor-is-valid': [
+      'error',
+      {
+        components: ['Link'],
+        specialLink: ['hrefLeft', 'hrefRight'],
+        aspects: ['invalidHref', 'preferButton'],
+      },
+    ],
+  };
+  
+ 
+ 
+ Lets break down this to explain it in simple terms -
+ 
+     'components': ['Link'] specifies that only the Link component should be considered valid anchors. Any other anchor tags would be give error.
+     
+    'specialLink': ['hrefLeft', 'hrefRight'] indicates that anchor tags with the hrefLeft or hrefRight prop should also be considered valid.
+    
+    aspects: ['invalidHref', 'preferButton'] checks for two aspects:
+        1) invalidHref checks if an anchor tag has an invalid href attribute value and raises an error if it does this.
+        2) preferButton suggests using a <button> element instead of an anchor tag when the Link component is not used for navigation.
+
+
+📌 Using Image Components for handling images..
+
+The rule enforces the usage of  Image components for handling images.  Image is a built-in component provided by the Next.js framework that optimizes and improves the performance of loading and displaying images on web pages.
+It has many features such as Fast image loading, resoponsive images..
+
+Lets see how we can implement this rule - 
+
+rules: {
+    'next/image-has-alt': 'error',
+    
+  },
+
+
+The 'next/image-has-alt' rule says that every usage of the Next.js Image component has an alt attribute specified.
+
+
+📌 Using  API Route Filenames..
+
+The rule enforces a naming for API route files. Next.js provides a built-in API routing feature that allows us to define  endpoints and handle requests.
+
+This rule will help in clarity of naming API route files..
+
+Lets see how we can implement this rule -
+
+
+1) rules: {
+    'next/api-file-name': ['error', { prefix: 'api-', suffix: true }],
+ 
+  }
+
+The 'next/api-file-name' rule is the naming convention for Next.js API route files. By setting this rule to 'error', it will be give an error if a file doesn't follow to the convention.
+
+
+2) rules: {
+    'next/api-file-name': ['error', { prefix: 'api-', suffix: true }],
+ 
+  }
+
+The 'next/api-file-name' rule is the naming convention for Next.js API route files. By setting this rule to 'warn', it will be give a warning  if a file doesn't follow to the convention.
+
+
+
+📌 Preventing direct use of  react/react-in-jsx-scope..
+
+This rule will helps enforce the proper usage of the React library in code.This rule helps prevent the accidental import of the React library infiles. It ensures that we don't explicitly import the React library or use the React object directly in JSX code.
+
+By preventing the direct usage of react or react-in-jsx-scope, this rule ensures that we are taking advantages of the automatic import behavior provided by Next.js, improving code readability and avoiding potential issues.
+
+
+This rull we implemented by this -
+
+ 1) rules: {
+    'react/react-in-jsx-scope': 'error',
+
+  }
+
+// It will throw error if rule is not followed.
+
+
+2)  rules: {
+    'react/react-in-jsx-scope': 'warn',
+
+  }
+  
+// It will give warning if rule is not followed.
+
+
+📌 Implementing Css Imports via Css modules...
+
+This rule is designed specifically for Next.js projects that use CSS imports, including CSS modules and global stylesheets. This rule helps enforce the correct import syntax for CSS files in your Next.js codebase.
+
+To implement this rule we have to config this -
+
+
+1)
+
+{
+  "rules": {
+    "next/css-modules": "error",
+    "next/global-styles": "error"
+  }
+}
+
+// It will give error if rule is not followed..
+
+
+
+
+2) {
+  "rules": {
+    "next/css-modules": "warn",
+    "next/global-styles": "warn"
+  }
+}
+
+// It will give warning if rule is not followed..
+
+
+Lets break it down -
+
+
+    1) next/css-modules: This is correct import syntax for CSS modules in Next.js. CSS modules are imported with a specific naming convention to distinguish them from regular CSS files. The rule ensures that the import statement follows the  syntax for CSS modules.
+
+    2) next/global-styles: This rule enforces the correct import syntax for global stylesheets in Next.js. Global stylesheets are usually imported without any additional naming conventions. The rule ensures that the import statement for global stylesheets is correctly written.
+
+
+
+                                               
+                                                    THANKS ❤️
+
+
+
+
+                                      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
